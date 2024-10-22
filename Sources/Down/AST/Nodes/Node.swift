@@ -77,6 +77,14 @@ public extension CMarkNode {
         return cmark_node_parent(self)
     }
 
+    var next: CMarkNode? {
+        return cmark_node_next(self)
+    }
+
+    var previous: CMarkNode? {
+        return cmark_node_previous(self)
+    }
+
     var type: cmark_node_type {
         return cmark_node_get_type(self)
     }
@@ -127,6 +135,26 @@ public extension CMarkNode {
 
     var endColumn: Int {
         return Int(cmark_node_get_end_column(self))
+    }
+}
+
+extension CMarkNode: Equatable {
+    public static func == (lhs: CMarkNode, rhs: CMarkNode) -> Bool {
+        lhs.parent == rhs.parent &&
+        lhs.previous == rhs.previous &&
+        lhs.type == rhs.type &&
+        lhs.literal == rhs.literal &&
+        lhs.fenceInfo == rhs.fenceInfo &&
+        lhs.headingLevel == rhs.headingLevel &&
+        lhs.listType == rhs.listType &&
+        lhs.listStart == rhs.listStart &&
+        lhs.listDelimiter == rhs.listDelimiter &&
+        lhs.url == rhs.url &&
+        lhs.title == rhs.title &&
+        lhs.startLine == rhs.startLine &&
+        lhs.endLine == rhs.endLine &&
+        lhs.startColumn == rhs.startColumn &&
+        lhs.endColumn == rhs.endColumn
     }
 }
 
