@@ -12,13 +12,14 @@ import libcmark
 public struct ChildSequence: Sequence {
 
     // MARK: - Properties
+    let node: Node?
 
-    let node: CMarkNode
+    let cmarkNode: CMarkNode
 
     // MARK: - Methods
 
     public func makeIterator() -> Iterator {
-        return Iterator(node: cmark_node_first_child(node))
+        return Iterator(node: node, cmarkNode: cmark_node_first_child(cmarkNode))
     }
 
 }
@@ -30,17 +31,18 @@ public extension ChildSequence {
     struct Iterator: IteratorProtocol {
 
         // MARK: - Properties
+        let node: Node?
 
-        var node: CMarkNode?
+        var cmarkNode: CMarkNode?
 
         // MARK: - Methods
 
         public mutating func next() -> Node? {
-            guard let node = node else { return nil }
-            defer { self.node = cmark_node_next(node) }
+            guard let cmarkNode = cmarkNode else { return nil }
+            defer { self.cmarkNode = cmark_node_next(cmarkNode) }
 
-            guard let result = node.wrap() else {
-                assertionFailure("Couldn't wrap node of type: \(node.type)")
+            guard let result = cmarkNode.wrap(parent: self.node) else {
+                assertionFailure("Couldn't wrap node of type: \(cmarkNode.type)")
                 return nil
             }
 

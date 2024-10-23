@@ -13,6 +13,8 @@ import libcmark
 
 public protocol Node {
 
+    var parent: Node? { get }
+
     /// The wrapped node.
 
     var cmarkNode: CMarkNode { get }
@@ -34,7 +36,7 @@ public extension Node {
     /// Sequence of wrapped child nodes.
 
     var childSequence: ChildSequence {
-        return ChildSequence(node: cmarkNode)
+        return ChildSequence(node: self, cmarkNode: cmarkNode)
     }
 
 }
@@ -47,28 +49,28 @@ public extension CMarkNode {
 
     /// Wraps the cmark node referred to by this pointer.
 
-    func wrap() -> Node? {
+    func wrap(parent: Node?) -> Node? {
         switch type {
-        case CMARK_NODE_DOCUMENT:       return Document(cmarkNode: self)
-        case CMARK_NODE_BLOCK_QUOTE:    return BlockQuote(cmarkNode: self)
-        case CMARK_NODE_LIST:           return List(cmarkNode: self)
-        case CMARK_NODE_ITEM:           return Item(cmarkNode: self)
-        case CMARK_NODE_CODE_BLOCK:     return CodeBlock(cmarkNode: self)
-        case CMARK_NODE_HTML_BLOCK:     return HtmlBlock(cmarkNode: self)
-        case CMARK_NODE_CUSTOM_BLOCK:   return CustomBlock(cmarkNode: self)
-        case CMARK_NODE_PARAGRAPH:      return Paragraph(cmarkNode: self)
-        case CMARK_NODE_HEADING:        return Heading(cmarkNode: self)
-        case CMARK_NODE_THEMATIC_BREAK: return ThematicBreak(cmarkNode: self)
-        case CMARK_NODE_TEXT:           return Text(cmarkNode: self)
-        case CMARK_NODE_SOFTBREAK:      return SoftBreak(cmarkNode: self)
-        case CMARK_NODE_LINEBREAK:      return LineBreak(cmarkNode: self)
-        case CMARK_NODE_CODE:           return Code(cmarkNode: self)
-        case CMARK_NODE_HTML_INLINE:    return HtmlInline(cmarkNode: self)
-        case CMARK_NODE_CUSTOM_INLINE:  return CustomInline(cmarkNode: self)
-        case CMARK_NODE_EMPH:           return Emphasis(cmarkNode: self)
-        case CMARK_NODE_STRONG:         return Strong(cmarkNode: self)
-        case CMARK_NODE_LINK:           return Link(cmarkNode: self)
-        case CMARK_NODE_IMAGE:          return Image(cmarkNode: self)
+        case CMARK_NODE_DOCUMENT:       return Document(parent: parent, cmarkNode: self)
+        case CMARK_NODE_BLOCK_QUOTE:    return BlockQuote(parent: parent, cmarkNode: self)
+        case CMARK_NODE_LIST:           return List(parent: parent, cmarkNode: self)
+        case CMARK_NODE_ITEM:           return Item(parent: parent, cmarkNode: self)
+        case CMARK_NODE_CODE_BLOCK:     return CodeBlock(parent: parent, cmarkNode: self)
+        case CMARK_NODE_HTML_BLOCK:     return HtmlBlock(parent: parent, cmarkNode: self)
+        case CMARK_NODE_CUSTOM_BLOCK:   return CustomBlock(parent: parent, cmarkNode: self)
+        case CMARK_NODE_PARAGRAPH:      return Paragraph(parent: parent, cmarkNode: self)
+        case CMARK_NODE_HEADING:        return Heading(parent: parent, cmarkNode: self)
+        case CMARK_NODE_THEMATIC_BREAK: return ThematicBreak(parent: parent, cmarkNode: self)
+        case CMARK_NODE_TEXT:           return Text(parent: parent, cmarkNode: self)
+        case CMARK_NODE_SOFTBREAK:      return SoftBreak(parent: parent, cmarkNode: self)
+        case CMARK_NODE_LINEBREAK:      return LineBreak(parent: parent, cmarkNode: self)
+        case CMARK_NODE_CODE:           return Code(parent: parent, cmarkNode: self)
+        case CMARK_NODE_HTML_INLINE:    return HtmlInline(parent: parent, cmarkNode: self)
+        case CMARK_NODE_CUSTOM_INLINE:  return CustomInline(parent: parent, cmarkNode: self)
+        case CMARK_NODE_EMPH:           return Emphasis(parent: parent, cmarkNode: self)
+        case CMARK_NODE_STRONG:         return Strong(parent: parent, cmarkNode: self)
+        case CMARK_NODE_LINK:           return Link(parent: parent, cmarkNode: self)
+        case CMARK_NODE_IMAGE:          return Image(parent: parent, cmarkNode: self)
         default:                        return nil
         }
     }

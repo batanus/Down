@@ -13,6 +13,8 @@ public class BaseNode: Node {
 
     // MARK: - Properties
 
+    public let parent: Node?
+
     public let cmarkNode: CMarkNode
 
     public private(set) lazy var children: [Node] = Array(childSequence)
@@ -30,7 +32,8 @@ public class BaseNode: Node {
 
     // MARK: - Life cycle
 
-    init(cmarkNode: CMarkNode) {
+    init(parent: Node?, cmarkNode: CMarkNode) {
+        self.parent = parent
         self.cmarkNode = cmarkNode
     }
 

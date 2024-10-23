@@ -50,7 +50,7 @@ extension DownASTRenderable {
             throw DownErrors.astRenderingError
         }
 
-        return Document(cmarkNode: tree)
+        return Document(parent: nil, cmarkNode: tree)
     }
 
 }
