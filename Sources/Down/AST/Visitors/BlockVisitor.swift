@@ -23,6 +23,31 @@ public enum Block {
     case strong(NSMutableAttributedString)
     case link(NSMutableAttributedString)
     case image(NSMutableAttributedString)
+
+    public var string: NSMutableAttributedString {
+        switch self {
+        case .document(let block): block.first!.string
+        case .blockQuote(let string): string
+        case .list(let string): string
+        case .item(let string): string
+        case .codeBlock(let string): string
+        case .htmlBlock(let string): string
+        case .customBlock(let string): string
+        case .paragraph(let string): string
+        case .heading(let string): string
+        case .thematicBreak(let string): string
+        case .text(let string): string
+        case .softBreak(let string): string
+        case .lineBreak(let string): string
+        case .code(let string): string
+        case .htmlInline(let string): string
+        case .customInline(let string): string
+        case .emphasis(let string): string
+        case .strong(let string): string
+        case .link(let string): string
+        case .image(let string): string
+        }
+    }
 }
 
 public class BlockVisitor {
