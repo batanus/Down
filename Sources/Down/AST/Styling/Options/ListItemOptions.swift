@@ -26,20 +26,25 @@ public struct ListItemOptions {
     public var spacingAfterPrefix: CGFloat
     public var spacingAbove: CGFloat
     public var spacingBelow: CGFloat
+    public var lineSpacing: CGFloat
     public var alignment: NSTextAlignment
 
     // MARK: - Life cycle
 
-    public init(maxPrefixDigits: UInt = 2,
-                spacingAfterPrefix: CGFloat = 8,
-                spacingAbove: CGFloat = 4,
-                spacingBelow: CGFloat = 8,
-                alignment: NSTextAlignment = .natural) {
+    public init(
+        maxPrefixDigits: UInt = 2,
+        spacingAfterPrefix: CGFloat = 8,
+        spacingAbove: CGFloat = 4,
+        spacingBelow: CGFloat = 8,
+        lineSpacing: CGFloat = 0,
+        alignment: NSTextAlignment = .natural
+    ) {
 
         self.maxPrefixDigits = maxPrefixDigits
         self.spacingAfterPrefix = spacingAfterPrefix
         self.spacingAbove = spacingAbove
         self.spacingBelow = spacingBelow
+        self.lineSpacing = lineSpacing
         self.alignment = alignment
     }
 

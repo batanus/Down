@@ -46,6 +46,7 @@ public class ListItemParagraphStyler {
         let style = NSMutableParagraphStyle()
         style.paragraphSpacingBefore = options.spacingAbove
         style.paragraphSpacing = options.spacingBelow
+        style.lineSpacing = options.lineSpacing
         style.alignment = options.alignment
         return style
     }
