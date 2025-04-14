@@ -269,7 +269,7 @@ open class DownStyler: Styler {
 
 // MARK: - Helper Extensions
 
-private extension NSParagraphStyle {
+public extension NSParagraphStyle {
 
     func indented(by indentation: CGFloat) -> NSParagraphStyle {
         guard let result = mutableCopy() as? NSMutableParagraphStyle else { return self }
