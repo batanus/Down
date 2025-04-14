@@ -68,6 +68,12 @@ extension DownAttributedStringRenderable {
         return document.accept(visitor)
     }
 
+    public func toBlocks(_ options: DownOptions = .default, styler: Styler) throws -> Block {
+        let document = try self.toDocument(options)
+        let attrStringVisitor = AttributedStringVisitor(styler: styler, options: options)
+        let visitor = BlockVisitor(attributedStringVisitor: attrStringVisitor)
+        return document.accept(visitor)
+    }
 }
 
 #endif // !os(Linux)
