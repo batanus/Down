@@ -56,8 +56,14 @@ public class DownLayoutManager: NSLayoutManager {
 
     // MARK: - Drawing
 
-    override public func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
+    /// Draws custom block backgrounds **before** the system draws the selection highlight,
+    /// so the highlight stays visible on top.
+    override public func drawBackground(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
         drawCustomBackgrounds(forGlyphRange: glyphsToShow, at: origin)
+        super.drawBackground(forGlyphRange: glyphsToShow, at: origin)
+    }
+
+    override public func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
         super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
         drawCustomAttributes(forGlyphRange: glyphsToShow, at: origin)
     }
