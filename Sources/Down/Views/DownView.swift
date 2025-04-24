@@ -250,7 +250,7 @@ extension DownView: WKNavigationDelegate {
         #endif
     }
 
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         didLoadSuccessfully?()
     }
 

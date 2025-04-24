@@ -34,6 +34,17 @@ open class DownStyler: Styler {
     public let thematicBreakOptions: ThematicBreakOptions
     public let codeBlockOptions: CodeBlockOptions
 
+    public var blockBackgroundAttribute: BlockBackgroundColorAttribute {
+        BlockBackgroundColorAttribute(
+            color: colors.codeBlockBackground,
+            inset: codeBlockOptions.containerInset
+        )
+    }
+
+    public var blockParagraphStyle: NSParagraphStyle {
+        paragraphStyles.code.inset(by: codeBlockOptions.containerInset)
+    }
+
     private let itemParagraphStyler: ListItemParagraphStyler
 
     private var listPrefixAttributes: [NSAttributedString.Key: Any] {[
@@ -194,17 +205,12 @@ open class DownStyler: Styler {
     // MARK: - Common Styling
 
     private func styleGenericCodeBlock(in str: NSMutableAttributedString) {
-        let blockBackgroundAttribute = BlockBackgroundColorAttribute(
-            color: colors.codeBlockBackground,
-            inset: codeBlockOptions.containerInset)
-
-        let adjustedParagraphStyle = paragraphStyles.code.inset(by: blockBackgroundAttribute.inset)
-
         str.setAttributes([
             .font: fonts.code,
             .foregroundColor: colors.code,
-            .paragraphStyle: adjustedParagraphStyle,
-            .blockBackgroundColor: blockBackgroundAttribute])
+            .paragraphStyle: blockParagraphStyle,
+            .blockBackgroundColor: blockBackgroundAttribute
+        ])
     }
 
     private func styleGenericInlineCode(in str: NSMutableAttributedString) {

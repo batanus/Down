@@ -18,18 +18,23 @@ import AppKit
 
 #endif
 
-struct BlockBackgroundColorAttribute {
+public struct BlockBackgroundColorAttribute {
 
     // MARK: - Properties
 
-    var color: DownColor
-    var inset: CGFloat
+    public var color: DownColor
+    public var inset: CGFloat
+
+    public init(color: DownColor, inset: CGFloat) {
+        self.color = color
+        self.inset = inset
+    }
 
 }
 
 extension NSAttributedString.Key {
 
-    static let blockBackgroundColor = NSAttributedString.Key("blockBackgroundColor")
+    public static let blockBackgroundColor = NSAttributedString.Key("blockBackgroundColor")
 
 }
 

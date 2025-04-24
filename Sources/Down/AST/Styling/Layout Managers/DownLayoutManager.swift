@@ -98,7 +98,36 @@ public class DownLayoutManager: NSLayoutManager {
                 let maxY = isLineEndOfBlock ? lineUsedRect.maxY + inset : lineUsedRect.maxY
                 let blockRect = CGRect(minX: minX, minY: minY, maxX: maxX, maxY: maxY).translated(by: origin)
 
-                context.fill(blockRect)
+                // Draw code‑block background with rounded corners only on the outer edges
+                let cornerRadius: CGFloat = 16
+
+                #if canImport(UIKit)
+                var corners: UIRectCorner = []
+                if isLineStartOfBlock { corners.formUnion([.topLeft, .topRight]) }
+                if isLineEndOfBlock   { corners.formUnion([.bottomLeft, .bottomRight]) }
+
+                if corners.isEmpty {
+                    context.fill(blockRect)
+                } else {
+                    let path = UIBezierPath(
+                        roundedRect: blockRect,
+                        byRoundingCorners: corners,
+                        cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
+                    )
+                    path.fill()
+                }
+                #else
+                // macOS: build a CGPath that rounds only the requested corners
+                let cgPath = DownLayoutManager.roundedPath(
+                    in: blockRect,
+                    topLeft:  isLineStartOfBlock ? cornerRadius : 0,
+                    topRight: isLineStartOfBlock ? cornerRadius : 0,
+                    bottomLeft:  isLineEndOfBlock ? cornerRadius : 0,
+                    bottomRight: isLineEndOfBlock ? cornerRadius : 0
+                )
+                context.addPath(cgPath)
+                context.fillPath()
+                #endif
             }
         }
     }
@@ -227,5 +256,72 @@ private extension Array where Element == NSRange {
     }
 
 }
+
+#if canImport(AppKit) && !os(iOS)
+private extension DownLayoutManager {
+    /// Creates a CGPath with individually rounded corners (needed for macOS).
+    static func roundedPath(
+        in rect: CGRect,
+        topLeft: CGFloat,
+        topRight: CGFloat,
+        bottomLeft: CGFloat,
+        bottomRight: CGFloat
+    ) -> CGPath {
+
+        guard [topLeft, topRight, bottomLeft, bottomRight].contains(where: { $0 > 0 }) else {
+            return CGPath(rect: rect, transform: nil)
+        }
+
+        let path = CGMutablePath()
+        let maxX = rect.maxX, maxY = rect.maxY, minX = rect.minX, minY = rect.minY
+
+        // start at top‑left
+        path.move(to: CGPoint(x: minX + topLeft, y: minY))
+
+        // top edge
+        path.addLine(to: CGPoint(x: maxX - topRight, y: minY))
+        if topRight > 0 {
+            path.addArc(center: CGPoint(x: maxX - topRight, y: minY + topRight),
+                        radius: topRight,
+                        startAngle: -.pi/2,
+                        endAngle: 0,
+                        clockwise: false)
+        }
+
+        // right edge
+        path.addLine(to: CGPoint(x: maxX, y: maxY - bottomRight))
+        if bottomRight > 0 {
+            path.addArc(center: CGPoint(x: maxX - bottomRight, y: maxY - bottomRight),
+                        radius: bottomRight,
+                        startAngle: 0,
+                        endAngle: .pi/2,
+                        clockwise: false)
+        }
+
+        // bottom edge
+        path.addLine(to: CGPoint(x: minX + bottomLeft, y: maxY))
+        if bottomLeft > 0 {
+            path.addArc(center: CGPoint(x: minX + bottomLeft, y: maxY - bottomLeft),
+                        radius: bottomLeft,
+                        startAngle: .pi/2,
+                        endAngle: .pi,
+                        clockwise: false)
+        }
+
+        // left edge
+        path.addLine(to: CGPoint(x: minX, y: minY + topLeft))
+        if topLeft > 0 {
+            path.addArc(center: CGPoint(x: minX + topLeft, y: minY + topLeft),
+                        radius: topLeft,
+                        startAngle: .pi,
+                        endAngle: 3 * .pi / 2,
+                        clockwise: false)
+        }
+
+        path.closeSubpath()
+        return path
+    }
+}
+#endif
 
 #endif
