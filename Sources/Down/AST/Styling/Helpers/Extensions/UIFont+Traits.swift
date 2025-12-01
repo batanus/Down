@@ -20,7 +20,7 @@ public typealias DownFontDescriptor = NSFontDescriptor
 
 #endif
 
-extension DownFont {
+public extension DownFont {
 
     var isStrong: Bool {
         return contains(.strong)

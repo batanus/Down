@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension NSMutableAttributedString {
+public extension NSMutableAttributedString {
 
     func setAttributes(_ attrs: Attributes) {
         setAttributes(attrs, range: wholeRange)
