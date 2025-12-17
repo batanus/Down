@@ -4,33 +4,40 @@ import Foundation
 
 public enum Block {
     case document([Block])
-    case blockQuote(NSMutableAttributedString)
-    case list(NSMutableAttributedString)
-    case item(NSMutableAttributedString)
-    case codeBlock(NSMutableAttributedString)
-    case htmlBlock(NSMutableAttributedString)
-    case customBlock(NSMutableAttributedString)
-    case paragraph(NSMutableAttributedString)
-    case heading(NSMutableAttributedString)
-    case thematicBreak(NSMutableAttributedString)
-    case text(NSMutableAttributedString)
-    case softBreak(NSMutableAttributedString)
-    case lineBreak(NSMutableAttributedString)
-    case code(NSMutableAttributedString)
-    case htmlInline(NSMutableAttributedString)
-    case customInline(NSMutableAttributedString)
-    case emphasis(NSMutableAttributedString)
-    case strong(NSMutableAttributedString)
-    case link(NSMutableAttributedString)
-    case image(NSMutableAttributedString)
+    case blockQuote(NSAttributedString)
+    case list(NSAttributedString)
+    case item(NSAttributedString)
+    case codeBlock(NSAttributedString, String?)
+    case htmlBlock(NSAttributedString)
+    case customBlock(NSAttributedString)
+    case paragraph(NSAttributedString)
+    case heading(NSAttributedString)
+    case thematicBreak(NSAttributedString)
+    case text(NSAttributedString)
+    case softBreak(NSAttributedString)
+    case lineBreak(NSAttributedString)
+    case code(NSAttributedString)
+    case htmlInline(NSAttributedString)
+    case customInline(NSAttributedString)
+    case emphasis(NSAttributedString)
+    case strong(NSAttributedString)
+    case link(NSAttributedString)
+    case image(NSAttributedString)
 
-    public var string: NSMutableAttributedString {
+    public var childBlocks: [Block] {
+        switch self {
+        case .document(let blocks): blocks
+        default: []
+        }
+    }
+
+    public var string: NSAttributedString {
         switch self {
         case .document(let block): block.first!.string
         case .blockQuote(let string): string
         case .list(let string): string
         case .item(let string): string
-        case .codeBlock(let string): string
+        case .codeBlock(let string, _): string
         case .htmlBlock(let string): string
         case .customBlock(let string): string
         case .paragraph(let string): string
@@ -79,7 +86,7 @@ extension BlockVisitor: Visitor {
     }
     
     public func visit(codeBlock node: CodeBlock) -> Block {
-        .codeBlock(attributedStringVisitor.visit(codeBlock: node))
+        .codeBlock(attributedStringVisitor.visit(codeBlock: node), node.fenceInfo)
     }
     
     public func visit(htmlBlock node: HtmlBlock) -> Block {
